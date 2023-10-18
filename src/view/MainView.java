@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
 public class MainView extends JFrame {
 
     private MainView mainView;
-    private JTextField idTextfeld, bezeichnungTextfeld,
-            fachgebietTextfeld, kursartTextfeld;
+    private JTextField idTextfeld, bezeichnungTextfeld, fachgebietTextfeld;
     private JButton abfrageButton, ändernButton;
+    private JRadioButton onlineRadioButton, präsenzRadioButton, selbsstudiumRadioButton;
 
     public MainView() {
         this.mainView = this;
@@ -28,7 +28,7 @@ public class MainView extends JFrame {
         // Hauptfenster
         setLayout(new BorderLayout());
         JPanel topPanel = new JPanel( new FlowLayout() );
-        JPanel centerPanel = new JPanel(new GridLayout(4, 2));
+        JPanel centerPanel = new JPanel(new GridLayout(6, 2));
         JPanel bottomPanel = new JPanel(new FlowLayout());
         add(topPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
@@ -48,9 +48,20 @@ public class MainView extends JFrame {
         centerPanel.add(new JLabel("Fachgebiet:"));
         fachgebietTextfeld = new JTextField();
         centerPanel.add(fachgebietTextfeld);
-        kursartTextfeld = new JTextField();
+        onlineRadioButton = new JRadioButton("Online");
+        präsenzRadioButton = new JRadioButton("Präsenz");
+        selbsstudiumRadioButton = new JRadioButton("Selbststudium");
         centerPanel.add(new JLabel("Kursart:"));
-        centerPanel.add(kursartTextfeld);
+        centerPanel.add(onlineRadioButton);
+        centerPanel.add( new JLabel("") );
+        centerPanel.add(präsenzRadioButton);
+        centerPanel.add( new JLabel("") );
+        centerPanel.add(selbsstudiumRadioButton);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(onlineRadioButton);
+        buttonGroup.add(präsenzRadioButton);
+        buttonGroup.add(selbsstudiumRadioButton);
+        onlineRadioButton.setSelected(true);
 
         // bottomPanel
         abfrageButton = new JButton("Abfrage");
@@ -84,16 +95,24 @@ public class MainView extends JFrame {
     }
 
     public Kursart getKursart() {
-        String kursart = kursartTextfeld.getText();
-        if (kursart.equals(Kursart.PRÄSENZ.toString()))
-            return Kursart.PRÄSENZ;
-        if (kursart.equals(Kursart.ONLINE.toString()))
+        if ( onlineRadioButton.isSelected() )
             return Kursart.ONLINE;
+        if ( präsenzRadioButton.isSelected() )
+            return Kursart.PRÄSENZ;
         return Kursart.SELBSTSTUDIUM;
     }
 
     public void setKursart(Kursart kursart) {
-        kursartTextfeld.setText(kursart.toString());
+        switch (kursart) {
+            case ONLINE:
+                onlineRadioButton.setSelected(true);
+                break;
+            case PRÄSENZ:
+                präsenzRadioButton.setSelected(true);
+                break;
+            default:
+                selbsstudiumRadioButton.setSelected(true);
+        }
     }
 
     public void setAbfrageButtonListener(ActionListener listener) {
